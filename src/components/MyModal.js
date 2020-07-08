@@ -58,7 +58,7 @@ const MyModal = (props) => {
       }`,
     };
 
-    fetch("http://localhost:4000/graphql", {
+    fetch("https://event-booking-node.herokuapp.com/graphql", {
       method: "POST",
       body: JSON.stringify(reqBody),
       headers: {
