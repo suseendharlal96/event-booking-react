@@ -57,6 +57,7 @@ const Auth = (props) => {
         createUser(userInput: {email:"${formValue.email}",password:"${formValue.password}"}){
           _id
           email
+          token
         }
       }`,
         };
