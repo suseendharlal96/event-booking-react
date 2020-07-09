@@ -99,6 +99,7 @@ const Auth = (props) => {
             }
             if (res.data.createUser) {
               setUserId(res.data.createUser._id);
+              setToken(res.data.createUser.token);
               setEmail(res.data.createUser.email);
             }
             props.history.push("/events");
