@@ -16,7 +16,6 @@ const Events = (props) => {
   const [events, setEvents] = useState(null);
   const [actualEvents, setActualEvents] = useState([]);
   const [userEvents, setUserEvents] = useState(false);
-  const [bookings, setBookings] = useState(null);
   useEffect(() => {
     console.log(userId, typeof userId);
     console.log(token);
@@ -68,52 +67,6 @@ const Events = (props) => {
         if (res && res.data.events && res.data.events.length) {
           setEvents(res.data.events);
           setActualEvents(res.data.events);
-          if (userId) {
-            getBookings();
-          }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getBookings = () => {
-    const reqBody = {
-      query: `
-              query{
-                bookings{
-                  _id
-                  event{
-                    _id
-                    bookedBy
-                  }
-                  user{
-                    _id
-                  }
-                }
-              }
-              `,
-    };
-    fetch("https://event-booking-node.herokuapp.com/graphql", {
-      method: "POST",
-      body: JSON.stringify(reqBody),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-    })
-      .then((res) => {
-        if (res.status !== 200 && res.status !== 201) {
-          // setLoading(false);
-          throw new Error("Failed!");
-        }
-        return res.json();
-      })
-      .then((res) => {
-        console.log(res);
-        if (res && res.data) {
-          setBookings(res.data.bookings);
         }
       })
       .catch((err) => {
@@ -154,7 +107,6 @@ const Events = (props) => {
         console.log(res);
         if (res && res.data) {
           getEvents();
-          getBookings();
         }
       })
       .catch((err) => {
@@ -174,22 +126,10 @@ const Events = (props) => {
   };
 
   const bookingButton = (event) => {
-    console.log(event);
-    if (bookings && bookings.length) {
-      const a =
-        event.bookedBy && event.bookedBy.findIndex((bId) => bId === userId);
-      const b = bookings.findIndex((bId) => bId.event._id === event._id);
-      console.log(a);
-      console.log(b);
-    }
     return (
       <React.Fragment>
         {userId && userId !== event.creator._id ? (
-          bookings &&
-          bookings.length &&
-          event.bookedBy &&
-          event.bookedBy.findIndex((bId) => bId === userId) >= 0 &&
-          bookings.findIndex((bId) => bId.event._id === event._id) >= 0 ? (
+          event.bookedBy.findIndex((bId) => bId === userId) >= 0 ? (
             <Button style={{ float: "right" }} inverted color="green">
               Event Booked
             </Button>
